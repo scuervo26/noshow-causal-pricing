@@ -1,0 +1,36 @@
+# TFG aiXtensa — explicit Python dependencies (Python 3.14)
+# For full transitive dependency pins (reproducibility), see requirements-lock.txt
+#
+# Install:  python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# Reproduce exactly:  python3 -m venv .venv && .venv/bin/pip install -r requirements-lock.txt
+
+# Core data + scientific stack
+pandas==3.0.2
+numpy==2.4.4
+scipy==1.17.1
+
+# Modelling
+scikit-learn==1.8.0
+xgboost==3.2.0
+shap==0.51.0
+
+# Visualisation
+matplotlib==3.10.9
+seaborn==0.13.2
+plotly==6.7.0
+
+# Notebook + dashboard
+jupyter==1.1.1
+nbformat==5.10.4
+streamlit==1.57.0
+
+# I/O
+openpyxl==3.1.5
+
+# Notebook 07 — webscraping
+requests==2.33.1
+beautifulsoup4==4.14.3
+lxml==6.1.0
+
+# Notebook 04 — progress bar for cluster bootstrap loop
+tqdm==4.67.3

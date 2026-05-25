@@ -1,0 +1,61 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project-specific
+# Raw dataset is retrievable from Kaggle — do not version-control the 11 MB CSV
+datos/brutos/healthcare_noshows.csv
+
+# Output artefacts that are reproducible from notebooks (regeneratable, not source of truth)
+# Keep .gitkeep files so empty folders survive
+outputs/figuras/*
+outputs/modelos/*
+outputs/reportes/*
+outputs/bootstrap/*
+!outputs/figuras/.gitkeep
+!outputs/modelos/.gitkeep
+!outputs/reportes/.gitkeep
+!outputs/bootstrap/.gitkeep
+
+# Processed data (regenerable from notebook 01)
+datos/procesados/*
+!datos/procesados/.gitkeep
+
+# Old notebook scaffolds archived for reference, not part of active codebase
+notebooks/_archivo_estructura_antigua/
+
+# Streamlit cache
+.streamlit/
+
+# Local env / secrets (none expected, but defensive)
+.env
+.env.local
+
+# Planning / internal context docs — kept out of the public repo for now.
+# Will be reintroduced (likely under docs/) once the project is finalised.
+CLAUDE.md
+PLAN_TECNICO.md
+Registro_Propuesta_TFG.md
+.claude/
+
+# Reference library and written memoria — copyrighted PDFs / deposited document, not redistributable
+referencias/
+memoria/
