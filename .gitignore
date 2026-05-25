@@ -39,9 +39,6 @@ outputs/bootstrap/*
 datos/procesados/*
 !datos/procesados/.gitkeep
 
-# Old notebook scaffolds archived for reference, not part of active codebase
-notebooks/_archivo_estructura_antigua/
-
 # Streamlit cache
 .streamlit/
 
