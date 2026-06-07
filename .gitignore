@@ -21,23 +21,13 @@ Thumbs.db
 *.swo
 
 # Project-specific
-# Raw dataset is retrievable from Kaggle — do not version-control the 11 MB CSV
-datos/brutos/healthcare_noshows.csv
+# Raw dataset is retrievable from Kaggle (~11 MB) — fetch and place at the path below
+datos/brutos/
 
-# Output artefacts that are reproducible from notebooks (regeneratable, not source of truth)
-# Keep .gitkeep files so empty folders survive
-outputs/figuras/*
-outputs/modelos/*
-outputs/reportes/*
-outputs/bootstrap/*
-!outputs/figuras/.gitkeep
-!outputs/modelos/.gitkeep
-!outputs/reportes/.gitkeep
-!outputs/bootstrap/.gitkeep
-
-# Processed data (regenerable from notebook 01)
-datos/procesados/*
-!datos/procesados/.gitkeep
+# Processed data (regenerable from notebook 01) and output artefacts (regenerable from notebooks)
+# Directories are created on demand by the modules in src/
+datos/procesados/
+outputs/
 
 # Streamlit cache
 .streamlit/
