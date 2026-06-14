@@ -3,7 +3,7 @@
 Predice la probabilidad de no-asistencia a partir de variables pre-tratamiento
 (SMS_received NO entra — es el tratamiento; se estima por separado en NB04).
 
-Decisiones cerradas (ver CLAUDE.md §"Decisiones NB03 — LOCKED"):
+Decisiones de configuración del modelo:
     1. Target = 1 - Showed_up (no-show). Documentado en `preparar_features`.
     2. Grid de 9 combos (max_depth × learning_rate) con early_stopping=50.
     3. CV walk-forward (3 folds expanding) dentro del 80% inicial del train,
@@ -15,7 +15,7 @@ Decisiones cerradas (ver CLAUDE.md §"Decisiones NB03 — LOCKED"):
     6. SHAP: TreeExplainer sobre todo el test set; submuestreo a 5k filas
        estratificado SÓLO para visualización.
 
-Convenciones (ver CLAUDE.md): funciones y nombres locales en español;
+Convenciones: funciones y nombres locales en español;
 identificadores de bibliotecas estándar en inglés; narrativa y plots en
 español; figuras a 200 DPI bajo `outputs/figuras/`.
 """
@@ -50,11 +50,11 @@ logger = logging.getLogger(__name__)
 
 
 # --------------------------------------------------------------------------
-# Constantes locked
+# Constantes de configuración
 # --------------------------------------------------------------------------
 
 # Features pre-tratamiento (SMS_received y scheduled_hour EXCLUIDOS por
-# diseño — ver PLAN_TECNICO §NB03 y nota sobre scheduled_hour constante).
+# diseño: SMS_received es el tratamiento, scheduled_hour es constante).
 # Las binarias bool del CSV (Scholarship, etc.) se castean a int antes de
 # entrenar; XGBoost las admite, pero el tipo explícito evita ambigüedad
 # en SHAP y en la matriz de features.
@@ -146,7 +146,7 @@ def cargar_train_test_nb03(
 
 
 def verificar_codificacion_showed_up_pred(df: pd.DataFrame) -> None:
-    """Re-verifica Showed_up=1 → asistió (Critical Implementation Rule 1).
+    """Re-verifica la convención Showed_up=1 → asistió.
 
     No transforma — sólo valida. La transformación canónica vive en NB01
     (`verificar_codificacion_showed_up` de `preparacion.py`); aquí simplemente
@@ -433,7 +433,7 @@ def ajustar_calibradores(
 ) -> tuple[CalibratedClassifierCV, pd.DataFrame]:
     """Ajusta Platt e Isotonic sobre train_calib y selecciona por Brier.
 
-    Regla (locked):
+    Regla de selección:
         - Si |Brier_iso - Brier_platt| < delta_tiebreak → Platt (más simple).
         - En otro caso → el de menor Brier.
 

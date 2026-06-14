@@ -1,6 +1,6 @@
 """Notebook 02 — análisis exploratorio de datos (EDA).
 
-Implementa los 7 pasos del PLAN_TECNICO.md §NB02:
+Implementa los 7 pasos del análisis exploratorio:
     1. Tasas de no-asistencia globales y por variable clave.
     2. Matriz de correlación (vs Showed_up y vs SMS_received).
     3. Análisis de la asignación de SMS por subgrupo.
@@ -9,7 +9,7 @@ Implementa los 7 pasos del PLAN_TECNICO.md §NB02:
     6. Análisis a nivel paciente (primeras vs repetidas, número de citas).
     7. Sidecar de metadatos con los números clave para defensa.
 
-Convenciones (ver CLAUDE.md):
+Convenciones:
     - Funciones y nombres locales en español por coherencia con NB01.
     - Narrativa de los plots en español (títulos, ejes, leyendas).
     - Identificadores de pandas/numpy/seaborn permanecen en inglés.
@@ -431,7 +431,7 @@ def inversion_signo_sms(df: pd.DataFrame) -> dict[str, float]:
     En este dataset se espera que SMS=1 muestre *más* no-show que SMS=0
     (selección: el SMS se mandaba a citas de mayor antelación y mayor
     riesgo basal). NO es un efecto perjudicial: es la motivación literal
-    para IPW (Critical Implementation Rule #4 / PLAN_TECNICO §NB02 paso 4).
+    para el IPW estimado en NB04.
     """
     grupo = df.groupby("SMS_received", observed=True)
     serie_noshow = 1 - grupo["Showed_up"].mean()
@@ -456,7 +456,7 @@ def inversion_signo_sms(df: pd.DataFrame) -> dict[str, float]:
     else:
         logger.warning(
             "Inversión NO observada en este split (Δ = %+.2f pp). Revisar "
-            "PLAN_TECNICO §NB02 paso 4 antes de redactar la narrativa.",
+            "la sección 4 del EDA antes de redactar la narrativa.",
             100 * diff_pp,
         )
 
