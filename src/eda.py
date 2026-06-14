@@ -529,10 +529,12 @@ def plot_distribucion_lead_time(df: pd.DataFrame, ruta_salida: str | Path) -> Pa
              edgecolor="white", linewidth=0.3)
     ax1.set_xlabel("lead_time (días)")
     ax1.set_ylabel("nº de citas")
+    n_graf = f"{len(sub):,}".replace(",", ".")
+    n_cola_str = f"{n_cola:,}".replace(",", ".")
     ax1.set_title(
         f"Distribución de lead_time (0 ≤ x ≤ P99 = {p99:.0f} días)\n"
-        f"n graficado = {len(sub):,}; descartado: {n_neg} con lead_time<0, "
-        f"{n_cola} en la cola >P99".replace(",", ".")
+        f"n graficado = {n_graf}; descartado: {n_neg} con lead_time<0, "
+        f"{n_cola_str} en la cola >P99"
     )
     ax1.axvline(0, color="grey", linestyle="--", linewidth=0.8)
 
