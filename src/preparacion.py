@@ -1,6 +1,6 @@
 """Notebook 01 — limpieza de datos y construcción de variables.
 
-Implementa las reglas críticas del PLAN_TECNICO.md para evitar fugas:
+Implementa las reglas metodológicas que evitan fugas de información:
     - Codificación por frecuencia (NUNCA por outcome) en Neighbourhood.
     - Regla estricta de tiempo de decisión para historial del paciente:
       sólo se usan citas previas con AppointmentDay < ScheduledDay_actual.
@@ -11,8 +11,8 @@ Este módulo se diseña como librería pura: el notebook 01 orquesta y narra.
 NOTA SOBRE NOMBRES DE FUNCIONES: este módulo usa nombres en español por
 coherencia con la narrativa del notebook y el dominio del TFG. Los
 identificadores de bibliotecas estándar (pandas, numpy, etc.) se mantienen
-en inglés. Si se decide migrar a inglés (ver CLAUDE.md §"Document & code
-conventions"), basta con renombrar; la lógica no depende del idioma.
+en inglés. Si se decide migrar a inglés, basta con renombrar; la lógica no
+depende del idioma.
 """
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
-# Bandas de edad fijas (PLAN_TECNICO §NB01 paso 6)
+# Bandas de edad fijas (bins clínicos)
 AGE_BAND_BINS = [-0.5, 18, 35, 55, 70, 200]
 AGE_BAND_LABELS = ["0-18", "19-35", "36-55", "56-70", "70+"]
 
@@ -62,10 +62,9 @@ def cargar_datos_brutos(ruta_csv: str | Path) -> pd.DataFrame:
 def verificar_codificacion_showed_up(df: pd.DataFrame) -> pd.DataFrame:
     """Verifica e impone la convención: Showed_up=1 → asistió, 0 → no-show.
 
-    Es la primera comprobación obligatoria de cualquier notebook (Critical
-    Implementation Rule 1 del PLAN_TECNICO). Una codificación invertida que
-    sobreviva hasta la defensa invalida todos los signos de ATE, SHAP y
-    Monte Carlo aguas abajo.
+    Es la primera comprobación obligatoria de cualquier notebook de
+    modelado. Una codificación invertida que sobreviva hasta la defensa
+    invalida todos los signos de ATE, SHAP y Monte Carlo aguas abajo.
 
     Devuelve una copia con Showed_up convertida a entero 0/1.
     """
@@ -263,7 +262,7 @@ def crear_features_basicas(df: pd.DataFrame) -> pd.DataFrame:
 def crear_features_historial_paciente(df: pd.DataFrame) -> pd.DataFrame:
     """Calcula prior_appointment_count, prior_noshow_rate, is_first_visit.
 
-    Regla estricta (Critical Implementation Rule 5 del PLAN_TECNICO):
+    Regla estricta de tiempo de decisión:
     para cada cita del paciente p con ScheduledDay = S, sólo se contabilizan
     citas previas del mismo paciente cuyo AppointmentDay < S — es decir, el
     resultado de esas citas ya se conocía cuando se tomó la decisión sobre
@@ -288,8 +287,7 @@ def crear_features_historial_paciente(df: pd.DataFrame) -> pd.DataFrame:
         - `prior_appointment_count` y `prior_noshow_rate` son resúmenes del
           historial observable, no del historial absoluto.
     Esta limitación debe citarse explícitamente como "censura por la
-    izquierda" en la sección de limitaciones del TFG escrito (ver
-    PLAN_TECNICO.md, "Known limitations" y plantilla de limitaciones).
+    izquierda" en la sección de limitaciones del TFG escrito.
     """
     df = df.copy().reset_index(drop=True)
     n = len(df)
@@ -390,7 +388,7 @@ def dividir_temporal(
 def ajustar_codificacion_frecuencia_barrio(train_df: pd.DataFrame) -> dict[str, float]:
     """Frecuencia (proporción) de cada barrio en el set de entrenamiento.
 
-    NUNCA usa Showed_up como entrada (Critical do-not #2 del PLAN_TECNICO).
+    NUNCA usa Showed_up como entrada (eso filtraría el outcome al modelo).
     Los barrios que aparecen sólo en test reciben 0 al aplicarse, lo que
     equivale a tratarlos como muy raros (interpretación natural de la
     codificación por frecuencia).
