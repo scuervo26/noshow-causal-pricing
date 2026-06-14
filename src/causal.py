@@ -464,14 +464,20 @@ def calcular_tabla_smd(
     return tabla
 
 
-def plot_love(tabla_smd: pd.DataFrame, ruta_fig: str | Path) -> None:
-    """Love plot: |SMD| pre vs post por covariable."""
+def plot_love(
+    tabla_smd: pd.DataFrame, ruta_fig: str | Path, metodo: str = "IPW",
+) -> None:
+    """Love plot: |SMD| pre vs post por covariable.
+
+    `metodo` etiqueta el esquema de ponderación ("IPW" o "ATO"), ya que esta
+    función se reutiliza para ambos.
+    """
     tabla = tabla_smd.sort_values("abs_smd_pre", ascending=True).reset_index(drop=True)
     y = np.arange(len(tabla))
     fig, ax = plt.subplots(figsize=(8, max(4, 0.32 * len(tabla))))
     ax.scatter(tabla["abs_smd_pre"], y, label="Sin ponderar",
                marker="o", s=40, color="#d62728")
-    ax.scatter(tabla["abs_smd_post"], y, label="Ponderado (IPW)",
+    ax.scatter(tabla["abs_smd_post"], y, label=f"Ponderado ({metodo})",
                marker="s", s=40, color="#1f77b4")
     for i, fila in tabla.iterrows():
         ax.plot([fila["abs_smd_pre"], fila["abs_smd_post"]], [i, i],
@@ -480,7 +486,7 @@ def plot_love(tabla_smd: pd.DataFrame, ruta_fig: str | Path) -> None:
     ax.set_yticks(y)
     ax.set_yticklabels(tabla["etiqueta"])
     ax.set_xlabel("|SMD|")
-    ax.set_title("Balance de covariables: antes vs después del IPW")
+    ax.set_title(f"Balance de covariables: antes vs después del {metodo}")
     ax.legend(loc="lower right")
     fig.tight_layout()
     fig.savefig(ruta_fig, dpi=DPI_FIGURAS, bbox_inches="tight")
