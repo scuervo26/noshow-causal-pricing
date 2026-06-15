@@ -19,10 +19,9 @@ matplotlib==3.10.9
 seaborn==0.13.2
 plotly==6.7.0
 
-# Notebook + dashboard
+# Notebook
 jupyter==1.1.1
 nbformat==5.10.4
-streamlit==1.57.0
 
 # I/O
 openpyxl==3.1.5
