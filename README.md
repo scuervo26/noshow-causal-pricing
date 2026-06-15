@@ -27,7 +27,7 @@ El proyecto las mantiene separadas a propósito y luego combina ambas respuestas
 | Capa causal | IPW estabilizado + overlap weights, bootstrap por paciente | Efecto del SMS sobre la asistencia bajo ajuste, con intervalo de confianza |
 | Segmentación | K-means sobre riesgo calibrado + variables de comportamiento | Arquetipos de paciente con riesgo basal diferenciado |
 | Pricing | Monte Carlo, 10.000 iteraciones | Distribución del valor recuperable (€) por cita y mes |
-| Parámetros de mercado | Webscraping ligero de tarifas de clínicas privadas españolas | Rangos empíricos anclados al mercado español |
+| Parámetros de mercado | Benchmarking documental de tarifas de clínicas privadas españolas | Rangos empíricos anclados al mercado español |
 
 El modelo de pricing Monte Carlo es el núcleo del trabajo: convierte una estimación metodológicamente cuidada en algo accionable para el responsable de una clínica. La recomendación se entrega como tarifas de cuota fija + variable (porcentaje del valor recuperado) en los percentiles P10 / P50 / P90 de la distribución simulada, de modo que el cliente elige su propio perfil de riesgo en lugar de recibir un precio único.
 
@@ -46,9 +46,8 @@ El CSV bruto no se versiona. Tras clonar, colócalo en `datos/brutos/healthcare_
 ## Estructura del repositorio
 
 ```
-notebooks/   01 → 07: limpieza, EDA, XGBoost+SHAP, IPW, segmentación, Monte Carlo, scraping
-src/         preparacion.py, eda.py, modelado.py, causal.py, pricing.py, rutas.py — lógica de los notebooks
-app/         prototipos en Streamlit (calculadora de ROI, dashboard)
+notebooks/   01 → 07: limpieza, EDA, XGBoost+SHAP, IPW, segmentación, Monte Carlo, benchmarking de mercado
+src/         preparacion.py, eda.py, modelado.py, causal.py, segmentacion.py, pricing.py, mercado.py, rutas.py — lógica de los notebooks
 datos/       brutos/ (sin versionar), procesados/ (regenerables desde NB01)
 outputs/     figuras/, modelos/, reportes/, bootstrap/ (regenerables desde los notebooks)
 ```
@@ -72,21 +71,6 @@ jupyter notebook notebooks/
 ```
 
 Todos los procesos estocásticos (XGBoost, K-means, bootstrap, Monte Carlo) usan semilla fija, y los artefactos intermedios están versionados (`train_v1.csv`, `xgboost_v1.json`, `ate_bootstrap_v1.npy`) para que las re-ejecuciones sean estables.
-
----
-
-## Estado del proyecto
-
-| Notebook | Etapa | Estado |
-|---|---|---|
-| `01_limpieza_y_variables` | Limpieza + variables + partición temporal | Completado |
-| `02_exploracion_datos` | EDA + diagnóstico del sesgo de selección | Completado |
-| `03_modelo_xgboost_calibracion_shap` | XGBoost calibrado + SHAP | Completado |
-| `04_inferencia_causal_ipw` | IPW estabilizado + overlap weights + bootstrap | Completado |
-| `05_segmentacion_pacientes` | Segmentación de pacientes (K-means) | Pendiente |
-| `06_pricing_montecarlo` | Simulación de pricing Monte Carlo | Completado |
-| `07_webscraping_mercado` | Parámetros de mercado (España) | Pendiente |
-| `app/` | Calculadora de ROI + dashboard en Streamlit | Prototipo |
 
 ---
 
